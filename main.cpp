@@ -1,20 +1,25 @@
 #include <iostream>
-#include <vector>
-#include "demoApi.h"
-#include "designServices.h"
-#include "state_less_demo.h"
+#include "MessageQueue.h"
 
-int main(int argc, char **argv) {
+using namespace std;
 
+int main() {
+    // Create a message broker
+    MessageBroker broker;
 
-    APIDemo::main();
-    design_services_demo::main();
-    state_less_demo::main();
-    thread_pool_demo::main();
-    
+    // Create producers and consumers
+    Producer producer1(broker);
+    Producer producer2(broker);
+    Consumer consumer1(broker, processMessage);
+    Consumer consumer2(broker, processMessage);
 
-    std::vector<int> someVector(10, 0);
+    // Send messages from producers to the broker
+    producer1.sendMessage({"Hello from producer 1!"});
+    producer2.sendMessage({"Hello from producer 2!"});
 
-    std::cout << "Hello, world! fro, kdevelop" << std::endl;
+    // Retrieve and process messages from the broker's queue
+    consumer1.retrieveMessage();
+    consumer2.retrieveMessage();
+
     return 0;
 }
